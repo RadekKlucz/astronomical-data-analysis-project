@@ -3,50 +3,50 @@ title: "Astronomical data project"
 author: "Radosław Kluczewski"
 date: "26.01.2022"
 output: 
-  pdf_document: default
   html_document: default
+  pdf_document: default
 editor_options: 
   chunk_output_type: console
   markdown: 
     wrap: 72
 ---
 
-\section{Introduction}
+\section{Introduction to Asteroids data}
 
-In this short data project using R language Firstly it has been loaded
-data form AstroStatistics page. After that, the basic statistics are
-presented below:
+In this short data project using R language Firstly it has been loaded data form AstroStatistics page. After that, the basic statistics are presented below:
 
 ```{r include = FALSE}
-# Set working directory. If you don't know the path, enter pwd in the terminal to find your path 
+# Load the required libraries
+library(nortest)
+library(outliers)
+
+# Set working directory. If you don't know the path, enter pwd in the terminal to find your path
 setwd("C:/Users/Lenovo/Desktop/Github/R-project/main")
 
 # Load data with the file from data folder
 asteroids <- read.table("./data/asteroids.txt", header = T)
 
 # Sort data using second column
-asteroids_sorted <- asteroids[order(asteroids$Dens), ]
+asteroids_sorted <- asteroids[order(asteroids$Dens),]
 
 # Assign columns
-names <- asteroids[, 1]
-densinity <- asteroids[, 2]
-error <- asteroids[, 3]
+names <- asteroids_sorted[, 1]
+densinity <- asteroids_sorted[, 2]
+error <- asteroids_sorted[, 3]
 ```
 
 ```{r include=TRUE}
 summary(asteroids)
 ```
 
-The standard deviation \$ \\ sigma \$ has also been calculated and will
-be used in the following median standard error formula:
+The standard deviation \$ \\ sigma \$ has also been calculated and will be used in the following median standard error formula:
 
 \begin{equation}
-\label{wz1}
     SE_{me}=\frac{1,253\cdot \sigma}{\sqrt{N}}.
+    \label{wz1}
 \end{equation}
 
-The results are presented below after substituting them to the above
-formula, where for the dens and err columns:
+The results are presented below after substituting them to the above formula, where for the dens and err columns:
 
 ```{r include=FALSE}
 # Clculate standard deviation
@@ -63,182 +63,169 @@ se_densinity
 se_error
 ```
 
-b)  Na poniższych rysunkach pokazano rozkład danych, gdzie uwzględniono
-    również błędy:
+The figures below show the distribution of the data where errors are also included:
 
-```{r}
-dotchart(densinity, labels = names, cex = 0.9, xlab = expression(Gęstość ~ (g / cm ^ 3)))
+```{r figure 1}
+graph_data <-
+  dotchart(
+    densinity,
+    labels = names,
+    cex = 0.9,
+    xlab = expression(Densinity ~ (g / cm ^ 3))
+  )
 
-dotchart(densinity, labels = names)
+print(graph_data)
 ```
 
-Rysunek przedstawiający gęstość poszczególnych asteroid. Jak można
-zauważyć największe zagęszczenie danych występuje w okolicach gęstości o
-wartościach od 1 do 3. Dla pozostałych danych zaobserwowano bardzo duże
-gęstości co może budzić podejrzenia. W celu sprawdzenia, czy dane o
-dużej gęstości są prawdziwe wyrysowano wykres z błędami, który został
-przedstawiony poniżej:
+A drawing showing the density of individual asteroids. As can be seen, the highest density of data occurs around densities with values from 1 to 3. Very high densities were observed for the remaining data, which may raise suspicions. In order to check if the high-density data is true, the graph with errors was drawn, which is presented below:
 
-```{r warning=FALSE}
-plot(dens, ylim = c(0, 8), xlab = "Asteroidy", ylab = expression(Gęstość ~ (g / cm ^ 3)), pch = 20)
-num <- seq(1, length(dens))
-segments(num, dens + err, num, dens - err)
+```{r figure 2}
+graph_errors <-
+  plot(
+    densinity,
+    ylim = c(0, 8),
+    xlab = "Asteroids",
+    ylab = expression(Densinity ~ (g / cm ^ 3)),
+    pch = 20
+  ) + grid()
+
+num <- seq(1, length(densinity))
+segments(num, densinity + error, num, densinity - error)
+
+print(graph_errors)
 ```
 
-Powyższy wykres pokazuje bardzo duże niepewności dla punktów o dużch
-gęstościach. Tak więc niekoniecznie punkty te mogą przyjmować tak duże
-wartości gęstości. Ostatnim wyrysowanym wykresem jest porównanie
-rozkładu gęstości asteroid do rozkładu błędów ich pomiarów. Wykres ten
-pozwala na sprawdzenie, czy dane mają zbliżoną gęstość lub nie.
-Dodatkowo pozwala określić jak duże są błędy w prównaniu do pomiarów
-gęstości i czy te błędy są do siebie zbliżone lub czy są odstające.
+The chart above shows very high uncertainties for large points densities. So, these points may not necessarily be so large density values. The last graph drawn is the comparison distribution of asteroid density to the distribution of errors in their measurements. This chart allows you to check whether the data is of similar density or not. In addition, it allows you to determine the size of the errors compared to the measurements densities and whether these errors are similar or outlier.
 
-```{r warning=FALSE}
-boxplot(asteroids[, 2:3], varwidth = T, notch = T, xlab = "Asteroidy", ylab = "Gęstość", pars = list(boxwex = 0.3, boxlwd = 1.5, whisklwd = 1.5, staplelwd = 1.5, outlwd = 1.5, font = 2))
+```{r figure 3}
+graph_comprasion <-
+  boxplot(
+    asteroids[, 2:3],
+    varwidth = T,
+    notch = T,
+    xlab = "Asteroids",
+    ylab = "Densinity
+",
+pars = list(
+  boxwex = 0.3,
+  boxlwd = 1.5,
+  whisklwd = 1.5,
+  staplelwd = 1.5,
+  outlwd = 1.5,
+  font = 2
+)
+  ) + grid()
+
+print(graph_comprasion)
 ```
 
-Jak możemy odczytać z rysunku dane mają zbliżoną do siebie gestość, a
-błędy są do siebie zbliżone.
+As we can read from the drawing, the data has a similar density, a errors are similar to each other. 
 
-c)  W celu sprawdzenia, czy dane można opisać rozkładem normalnym
-    zdecydowano się na dwa testy:
+To check whether the data can be described by a normal distribution two tests were decided on:
 
-```{r include = FALSE}
-library(nortest)
-library(outliers)
-```
+**Kolmogorov-Smirnov test:**
 
-**Test Kołmogorowa-Smirnowa:**
-
-```{r}
+```{r include=TRUE}
 lillie.test(dens)
 lillie.test(err)
 ```
 
-Test ten jest jednym z najbardziej znanych testów zbiorczych na
-normalność, gdzie testuje on hipotezę zerową o tym, że rozkład naszej
-zmiennej jest zbliżony do normalnego. Jako statystykę testową
-przyjmujemy: \begin{equation}
-D_n=\sup_x|F_0(x)-S_n(x)|,
-\label{wz2}
-\end{equation} gdzie $s_n(x)$ to dystybuanta empiryczna, która jest
-usatlona na podstawie uporządkowania próbki nastepująco:
+This test is one of the best-known collective tests on normality, where he tests the null hypothesis that the decomposition of our variable is close to normal. As a test statistic we accept: 
+
 \begin{equation}
-F_n(x)=\frac{1}{n}\sum_{i=1}^n I_{X_i\leqslant x},
-\label{wz3}
-\end{equation} gdzie: $X_i$ to wartość zmiennej X dla i-tej obserwacji.
-$I_{X_i\leqslant x}$ to funkcja charakterystyczna zbioru przyjmująca
-wartość jeden gdy $X_i\leqslant x$ i zero w przeciwnym wypadku. Duże
-wartości statystyki świadczą o dużej rozbieżności dystrybuanty $F_0$ i
-$S_n$, zatem konstruujemy prawostronny obszar krytyczny. Jeśli wartość
-$D_n$ wpadnie w obszar krytyczny to hipotezę zerową odrzucamy na
-przyjętym poziomie istotności.
+    D_n=\sup_x|F_0(x)-S_n(x)|,
+    \label{wz2}
+\end{equation} 
 
-Przyjmując poziom istotności na poziomie $\alpha=0.05$ oraz porównując
-go z otrzymaną wartością p-value możemy stwierdzić, czy hipotezę można
-przyjąć lub odrzucić. Dla gęstości hipotezę możemy uznać za poprawną,
-ponieważ wartość ta jest znacznie większa od przyjętej wartości
-$\alpha$, natomiast dla niepewności hipotezę odrzucamy, ponieważ wartość
-p-value jest znacznie mniejsza od $\alpha$.
+where $ s_n (x) $ is the empirical difference which is based on the sample order as follows:
 
-**Test Shapiro-Wilka:**
+\begin{equation}
+    F_n(x)=\frac{1}{n}\sum_{i=1}^n I_{X_i\leqslant x},
+    \label{wz3}
+\end{equation} 
+where: $ X_i $ is the value of the X variable for the i-th observation. $ I_{X_i \leqslant x} $ is a characteristic function of the receiving set value one if $ X_i \leqslant x $ and zero otherwise. Big the statistics values indicate a large discrepancy in the distribution function $ F_0 $ and $ S_n $, so we construct a right-hand critical area. If the value of $ D_n $ falls into the critical area, we reject the null hypothesis on adopted significance level.
 
-```{r}
-shapiro.test(dens)
-shapiro.test(err)
+Assuming the significance level of $ \alpha = 0.05 $ and comparing go with the obtained p-value, we can say whether the hypothesis can be accept or reject. For density, the hypothesis is correct, because this value is much greater than the assumed value $ \alpha $, while for uncertainty we reject the hypothesis because value p-value is much smaller than $ \alpha $.
+
+**Shapiro-Wilk test:**
+
+```{r include=TRUE}
+shapiro.test(densinity)
+shapiro.test(error)
 ```
 
-Test ten pozwala sprawdzić, czy próba pochodzi z populacji o rozkładzie
-normalnym. Statystyką testową jest: \begin{equation}
-W=\frac{(\sum_{i=1}^n a_i x_{(i)})^2}{\sum_{i=1}^n(x_i-\overline{x})^2},
-\label{wz4}
-\end{equation} gdzie: $x_i$ jest $i$-tą najmniejszą liczbą w próbce,
-$\overline{x}$ to średnia z próbki, natomiast $a_i$ wyrażaja się przez
-wzór: $(a_1,\ldots,a_n)=\frac{m^T V^{-1}}{C}$. $C$ z wcześniejszego
-wzoru to norma wektora, która jest opisana wzorem:
-$C=||m^TV^{-1}||=\sqrt{m^T V^{-1}V^{-1}m}$, gdzie $m=(m_1,\ldots,m_n)^T$
-zawiera obserwacje dla wartości niemalejących.
+This test verifies that the sample is from a population with a distribution normal. The test statistic is:
+\begin{equation}
+    W=\frac{(\sum_{i=1}^n a_i x_{(i)})^2}{\sum_{i=1}^n(x_i-\overline{x})^2},
+    \label{wz4}
+\end{equation} 
+where: $ x_i $ is $ i$ - the smallest number in the sample, $ \overline {x} $ is the sample mean, while $ a_i $ is expressed as
+pattern: $(a_1 ,\ldots ,a_n)=\frac{m ^ T V ^ {-1}}{C}$. $C$ from the previous one of the formula is the norm of the vector, which is described by the formula: $C=||m ^ T V ^ {-1}||=\sqrt{m ^ T V ^ {-1} V ^ {-1} m}$, gdzie $m=(m_1, \ldots, m_n) ^ T$ includes observations for non-decreasing values.
 
-Hipotezą zerową to pochodznie próby z populacji o rozkładzie normalnym.
-Dla wcześciej przyjętego poziomu istotności możemy stwierdzić, że
-hipoteze dla gęstości asteriod możemy przyjąść za słuszną, natomiast
-hipotezę dla niepewności należy odrzucić z powodu znacznie mniejszej
-wartości p-value.
+The null hypothesis is derived from samples from a normally distributed population. For the previously adopted significance level, we can say that We can assume that the hypothesis for the density of asteriods is correct, while the hypothesis for uncertainty must be rejected because it is much less p-value.
 
-d)  Na podstawie testów Dixon'a i Grubb'a zostało sprawdzone, czy w
-    danych znajdują się punkty, które są outliersami. Outliersy to
-    punkty, dla których pomiar może być wynikiem błedu grubego.
-    Pierwszym testem jest test Dixona, którego wyniki zostały
-    zaprezentowane poniżej:
+Based on the Dixon and Grubb tests, it was checked whether in data, there are outliers. Outliers it points where the measurement may be the result of a gross error. The first test is the Dixon test, the results of which were presented below:
 
-```{r}
-dixon.test(dens)
+```{r include=TRUE}
+dixon.test(densinity)
 ```
 
-Test Dixona to test służących do sprawdzenia, czy próbka zawiera dane
-powstałe w wyniku popełnienia błędu grubego. Statystyka testowa to:
-$Q=\mathrm{\frac{gap}{range}},$ gdzie gap to moduł z różnicy pomiędzy
-podejrzanym pomiarem, a wartością najbliższego pomiaru. Range jest
-różnicą pomiędzy największą wartości z próbki, a najmniejszą wartościa z
-próbki.
+The Dixon Test is a test to check whether a sample contains data resulting from committing a gross error. The test statistic is: $ Q = \mathrm {\frac{gap}{range}}, $ where gap is the module from the difference between the suspect measurement and the value of the closest measurement. Range is the difference between the largest value of the sample and the smallest value of z samples.
 
-Kolejnym testem na wykrycie błędu grubego obarczonego blędem jest test
-Grubbs'a, który polega na zdefiniowaniu hipotezy $H_0:$ o braku odchyleń
-w zbiorze danych oraz $H_a:$ czyli, czy istnieje ryzyko odchylenia w
-zbiorze danych. Statystyka testowa jest określona jako: \begin{equation}
-G=\frac{max|X_i-\overline{X}|}{\sigma},
-\label{wz5}
-\end{equation} gdzie $\overline{X}$ - średnia, $\sigma$ - odchylenie
-standardowe. Statystykę Grubbsa uznaje się największe odchylenie od
-średniej w zbiorze o rozkładzie normalnym. Wyniki testu prezentują się
-następująco:
+Another test for detecting a gross error with an error is the test Grubbs, which consists in defining the $ H_0: $ hypothesis of no deviation
+in the dataset and $ H_a: $ that is, is there a risk of a deviation in dataset. The test statistic is defined as:
+
+\begin{equation}
+    G=\frac{max|X_i - \overline{X}|}{\sigma},
+    \label{wz5}
+\end{equation} 
+
+where $ \overline{X} $ - mean, $ \sigma $ - deviation standard. The Grubbs statistic is considered to be the greatest deviation from the mean in a normally distributed set. The test results are presented as follows:
 
 ```{r}
 grubbs.test(dens)
 ```
 
-Analizujac wyniki testów można stwierdzić, że żaden punkt z nie możemy
-uznać za błąd gruby. Szczególnie punkty, które mają największą gęstość.
+Analyzing the test results, it can be concluded that we can not do any of the points considered a gross mistake. Especially the points that have the highest density.
 
-\section{Zadanie 2}
+\section{Globular clusters}
 
-```{r include = FALSE}
-galaxies1 <- read.table('./data/GlobClus_M31.dat', header = T)
-galaxies2 <- read.table('./data/GlobClus_MWG.dat', header = T)
-M31 <- galaxies1[,2]  ; MW <- galaxies2[,2]
+```{r include=FALSE}
+# Load globular clusters data from two files
+galaxies_M31 <- read.table('./data/GlobClus_M31.dat', header = T)
+galaxies_MW <- read.table('./data/GlobClus_MWG.dat', header = T)
+
+# Assing variables
+m_31 <- galaxies_M31[,2]  ; 
+milky_way <- galaxies_MW[,2]
 ```
 
-a)  Poniżej zaprazentowano statystyki dla dwóch zestawów danych, gdzie
-    pierwszym zestawem danych są obserwacje gromad kulistych w Drodze
-    Mlecznej:
+Below are the statistics for two datasets, where the first dataset is observations of globular clusters in the Milky Way:
 
 ```{r}
-summary(galaxies1)
+summary(galaxies_MW)
 ```
 
-natomiast drugim są obserwacje gromad kulistych w M31:
+while the second is observations of the globular clusters in M31:
 
 ```{r}
-summary(galaxies2)
+summary(galaxies_2)
 ```
 
-b)  Poniżej zaprezentowano rozkłady danych, dla których zdecydowano się
-    wyrysować histogramy w celu przedstawienia graficznego
-    częstotliwości występowania jasności w danym przedziale.
+The data distributions for which the decision was made are presented below draw histograms for graphical representation the frequency of occurrence of brightness in a given range.
 
-```{r}
-H1 <- hist(MW)
-H2 <- hist(M31)
+```{r figure 4}
+histogram_milky_way <- hist(milky_way)
+histogram_m_31 <- hist(m_31)
+
+print(histogram_milky_way)
+print(histogram_m_31)
 ```
 
-Z wykresów można zauważyć, iż wartość jasności jest na obu histogramach
-całkowicie różna. Chcąc przedstawić rozkłady na jednym wykresie należy
-uwzględnić poprawkę odejmując różnicę median Drogi Mlecznej oraz M31. W
-tym celu obliczono średnie, które następnie odjęto od siebie:
-
-```{r}
-module <- median(MW)-median(M31)
-module
+It can be seen from the graphs that the brightness value is in both histograms completely different. If you want to present the distributions in one graph, you should take into account the correction by subtracting the difference of the medians of the Milky Way and M31. In for this purpose, the means were calculated and then subtracted from each other:
+```{r include=FALSE}
+module <- median(milky_way)-median(m_31)
+print(module)
 ```
 
 Efektem będzie otrzymanie podobnego poziomu jasności, który jest
