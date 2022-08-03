@@ -6,9 +6,9 @@ Project in R language using astronomical data provided from <>. All theoretical 
 
 * Docker
 * R language
- * nortest
- * outliers
- * MASS
+  * nortest
+  * outliers
+  * MASS
 * RStudio
 * LaTeX
 
