@@ -3,8 +3,8 @@ title: "Astronomical data project"
 author: "Radosław Kluczewski"
 date: "26.01.2022"
 output: 
-  html_document: default
   pdf_document: default
+  html_document: default
 editor_options: 
   chunk_output_type: console
   markdown: 
@@ -13,8 +13,9 @@ editor_options:
 
 # Introduction to Asteroids data
 
-In this short data project using R language Firstly it has been loaded data form 
-AstroStatistics page. After that, the basic statistics are presented below:
+In this short data project using R language Firstly it has been loaded
+data form AstroStatistics page. After that, the basic statistics are
+presented below:
 
 ```{r include = FALSE}
 # Load the required libraries
@@ -40,8 +41,8 @@ error <- asteroids_sorted[, 3]
 summary(asteroids)
 ```
 
-The standard deviation $\sigma$ has also been calculated and will be used in 
-the following median standard error formula:
+The standard deviation $\sigma$ has also been calculated and will be
+used in the following median standard error formula:
 
 ```{=tex}
 \begin{equation}
@@ -49,8 +50,8 @@ the following median standard error formula:
     \label{wz1}
 \end{equation}
 ```
-The results are presented below after substituting them to the above formula, 
-where for the dens and err columns:
+The results are presented below after substituting them to the above
+formula, where for the dens and err columns:
 
 ```{r include=FALSE}
 # Calculate standard deviation
@@ -67,7 +68,8 @@ print(se_densinity)
 print(se_error)
 ```
 
-The figures below show the distribution of the data where errors are also included:
+The figures below show the distribution of the data where errors are
+also included:
 
 ```{r figure 1, echo=FALSE, warning=FALSE}
 graph_data <-
@@ -79,10 +81,11 @@ graph_data <-
   )
 ```
 
-A drawing showing the density of individual asteroids. As can be seen, the highest 
-density of data occurs around densities with values from 1 to 3. Very high densities 
-were observed for the remaining data, which may raise suspicions. In order to check 
-if the high-density data is true, the graph with errors was drawn, which is presented below:
+A drawing showing the density of individual asteroids. As can be seen,
+the highest density of data occurs around densities with values from 1
+to 3. Very high densities were observed for the remaining data, which
+may raise suspicions. In order to check if the high-density data is
+true, the graph with errors was drawn, which is presented below:
 
 ```{r figure 2, echo=FALSE, warning=FALSE}
 graph_errors <-
@@ -98,13 +101,14 @@ number <- seq(1, length(densinity))
 graph_with_all <- segments(number, densinity + error, number, densinity - error)
 ```
 
-The chart above shows very high uncertainties for large points densities. 
-So, these points may not necessarily be so large density values. The last graph 
-drawn is the comparison distribution of asteroid density to the distribution of 
-errors in their measurements. This chart allows you to check whether the data is 
-of similar density or not. In addition, it allows you to determine the size of 
-the errors compared to the measurements densities and whether these errors are 
-similar or outlier.
+The chart above shows very high uncertainties for large points
+densities. So, these points may not necessarily be so large density
+values. The last graph drawn is the comparison distribution of asteroid
+density to the distribution of errors in their measurements. This chart
+allows you to check whether the data is of similar density or not. In
+addition, it allows you to determine the size of the errors compared to
+the measurements densities and whether these errors are similar or
+outlier.
 
 ```{r figure 3, echo=FALSE, warning=FALSE}
 graph_comprasion <-
@@ -126,11 +130,11 @@ pars = list(
   )
 ```
 
-As we can read from the drawing, the data has a similar density, a errors are 
-similar to each other.
+As we can read from the drawing, the data has a similar density, a
+errors are similar to each other.
 
-To check whether the data can be described by a normal distribution two tests 
-were decided on:
+To check whether the data can be described by a normal distribution two
+tests were decided on:
 
 **Kolmogorov-Smirnov test:**
 
@@ -139,9 +143,9 @@ lillie.test(densinity)
 lillie.test(error)
 ```
 
-This test is one of the best-known collective tests on normality, where he tests 
-the null hypothesis that the decomposition of our variable is close to normal. 
-As a test statistic we accept:
+This test is one of the best-known collective tests on normality, where
+he tests the null hypothesis that the decomposition of our variable is
+close to normal. As a test statistic we accept:
 
 ```{=tex}
 \begin{equation}
@@ -149,27 +153,29 @@ As a test statistic we accept:
   \label{wz2}
 \end{equation}
 ```
-where $s_n(x)$ is the empirical difference which is based on the sample order 
-as follows:
+where $s_n(x)$ is the empirical difference which is based on the sample
+order as follows:
+
 ```{=tex}
 \begin{equation}
   F_n(x)=\frac{1}{n}\sum_{i=1} ^ n I_{X_i \leqslant x},
   \label{wz3}
 \end{equation}
 ```
-where: $X_i$ is the value of the X variable for the i-th observation. 
-$I\_{X_i \leqslant x}$ is a characteristic function of the receiving set 
-value one if $X_i \leqslant x$ and zero otherwise. Big the statistics values 
-indicate a large discrepancy in the distribution function $F_0$ and $S_n$, 
-so we construct a right-hand critical area. If the value of $D_n$ falls into the
-critical area, we reject the null hypothesis on adopted significance level.
+where: $X_i$ is the value of the X variable for the i-th observation.
+$I\_{X_i \leqslant x}$ is a characteristic function of the receiving set
+value one if $X_i \leqslant x$ and zero otherwise. Big the statistics
+values indicate a large discrepancy in the distribution function $F_0$
+and $S_n$, so we construct a right-hand critical area. If the value of
+$D_n$ falls into the critical area, we reject the null hypothesis on
+adopted significance level.
 
-Assuming the significance level of $\alpha = 0.05$ and comparing go
-with the obtained p-value, we can say whether the hypothesis can be
-accept or reject. For density, the hypothesis is correct, because this
-value is much greater than the assumed value $\alpha$, while for
-uncertainty we reject the hypothesis because value p-value is much
-smaller than $\alpha$.
+Assuming the significance level of $\alpha = 0.05$ and comparing go with
+the obtained p-value, we can say whether the hypothesis can be accept or
+reject. For density, the hypothesis is correct, because this value is
+much greater than the assumed value $\alpha$, while for uncertainty we
+reject the hypothesis because value p-value is much smaller than
+$\alpha$.
 
 **Shapiro-Wilk test:**
 
@@ -180,18 +186,20 @@ shapiro.test(error)
 
 This test verifies that the sample is from a population with a
 distribution normal. The test statistic is:
+
 ```{=tex}
 \begin{equation}
   W=\frac{(\sum_{i=1} ^ n a_i x_{(i)}) ^ 2}{\sum_{i = 1} ^ n(x_i - \overline{x}) ^ 2},
   \label{wz4}
 \end{equation} 
 ```
-where: $x_i$ is $i$ - the smallest number in the sample, $\overline{x}$ 
-is the sample mean, while \$ a_i \$ is expressed as pattern: 
-$(a_1 ,\ldots ,a_n)=\frac{m ^ T V ^ {-1}}{C}$. 
-$C$ from the previous one of the formula is the norm of the vector, which is
-described by the formula: $C=||m ^ T V ^ {-1}||=\sqrt{m ^ T V ^ {-1} V ^ {-1} m}$, 
-where $m=(m_1, \ldots, m_n) ^ T$ includes observations for non-decreasing values.
+where: $x_i$ is $i$ - the smallest number in the sample, $\overline{x}$
+is the sample mean, while \$ a_i \$ is expressed as pattern:
+$(a_1 ,\ldots ,a_n)=\frac{m ^ T V ^ {-1}}{C}$. $C$ from the previous one
+of the formula is the norm of the vector, which is described by the
+formula: $C=||m ^ T V ^ {-1}||=\sqrt{m ^ T V ^ {-1} V ^ {-1} m}$, where
+$m=(m_1, \ldots, m_n) ^ T$ includes observations for non-decreasing
+values.
 
 The null hypothesis is derived from samples from a normally distributed
 population. For the previously adopted significance level, we can say
@@ -209,16 +217,16 @@ dixon.test(densinity)
 ```
 
 The Dixon Test is a test to check whether a sample contains data
-resulting from committing a gross error. The test statistic is: 
+resulting from committing a gross error. The test statistic is:
 $Q =\mathrm {\frac{gap}{range}},$ where gap is the module from the
 difference between the suspect measurement and the value of the closest
 measurement. Range is the difference between the largest value of the
 sample and the smallest value of z samples.
 
 Another test for detecting a gross error with an error is the test
-Grubbs, which consists in defining the $H_0:$ hypothesis of no
-deviation in the dataset and $H_a:$ that is, is there a risk of a
-deviation in dataset. The test statistic is defined as:
+Grubbs, which consists in defining the $H_0:$ hypothesis of no deviation
+in the dataset and $H_a:$ that is, is there a risk of a deviation in
+dataset. The test statistic is defined as:
 
 ```{=tex}
 \begin{equation}
@@ -226,8 +234,7 @@ deviation in dataset. The test statistic is defined as:
   \label{wz5}
 \end{equation}
 ```
-
-where $ \overline{X} $ - mean, $ \sigma $ - deviation standard. The
+where $\overline{X}$ - mean, $\sigma$ - deviation standard. The
 Grubbs statistic is considered to be the greatest deviation from the
 mean in a normally distributed set. The test results are presented as
 follows:
@@ -286,8 +293,8 @@ module <- median(milky_way) - median(m_31)
 print(module)
 ```
 
-The result will be a similar brightness level to that observable in our galaxy. 
-The results of the chart comparison remained presented below:
+The result will be a similar brightness level to that observable in our
+galaxy. The results of the chart comparison remained presented below:
 
 ```{r figure 5, echo=FALSE, warning=FALSE}
 graph_distribution_mw <-
@@ -320,31 +327,31 @@ legend <-
 grid()
 ```
 
-The result of the **module** value was compared with the result of the rank test 
-Wilcoxon, which was calculated below:
+The result of the **module** value was compared with the result of the
+rank test Wilcoxon, which was calculated below:
 
 ```{r echo=FALSE}
 wilcox.test(milky_way, m_31 + module)
 ```
 
-As can be seen, the values determined by the median and the test are similar. 
-Thus, it can be assumed that the median difference as a shift is satisfactorily 
-sufficient..
+As can be seen, the values determined by the median and the test are
+similar. Thus, it can be assumed that the median difference as a shift
+is satisfactorily sufficient..
 
-Q-Q - a quantile-quantile plot is used, among other things, to compare or the 
-data distribution follows the model. Two-dimensional graph variables represents 
-the points that arise on the plot as a result two corresponding quantile values 
-of their random variables decomposition. it is worth noting that if all points 
-correspond with the line straight line, the random variables in the plot are described 
-by the same decomposition. The procedure for creating a chart is as follows as follows:
+Q-Q - a quantile-quantile plot is used, among other things, to compare
+or the data distribution follows the model. Two-dimensional graph
+variables represents the points that arise on the plot as a result two
+corresponding quantile values of their random variables decomposition.
+it is worth noting that if all points correspond with the line straight
+line, the random variables in the plot are described by the same
+decomposition. The procedure for creating a chart is as follows as
+follows:
 
-
-- ordering in ascending order residues, which are empirical quantiles,
-- compute quantile orders,
-- compute theoretical quantiles,
-- sort residuo ascending for the second dataset,
-- summary of quantiles in the plot. 
-
+-   ordering in ascending order residues, which are empirical quantiles,
+-   compute quantile orders,
+-   compute theoretical quantiles,
+-   sort residuo ascending for the second dataset,
+-   summary of quantiles in the plot.
 
 The quantile graphs of the quantile are presented below:
 
@@ -362,8 +369,8 @@ graph_quantil_mw_2 <- qqline(milky_way, lty = 2, lwd = 1.5)
 
 The OY axis of the above graph shows the empirical light distribution
 clusters in the Milky Way, and the OX axis theoretical distribution
-normal distribution. As can be seen, the empirical quantiles agree
-with the theoretical model.
+normal distribution. As can be seen, the empirical quantiles agree with
+the theoretical model.
 
 ```{r figure 7, echo=FALSE, warning=FALSE}
 graph_quantil_m31_1 <-
@@ -377,13 +384,12 @@ graph_quantil_m31_1 <-
 graph_quantil_m31_2 <- qqline(m_31, lty = 2, lwd = 1.5)
 ```
 
-Similarly as before, the OY axis of the above graph is shown
-empirical distribution of the brightness of the clusters in M31, while the OX axis
-theoretical distribution of the normal distribution. It can also be seen that
-the theoretical model does not agree with the lower values.
+Similarly as before, the OY axis of the above graph is shown empirical
+distribution of the brightness of the clusters in M31, while the OX axis
+theoretical distribution of the normal distribution. It can also be seen
+that the theoretical model does not agree with the lower values.
 
-Comparing the distribution of two data sets, we get the following
-chart:
+Comparing the distribution of two data sets, we get the following chart:
 
 ```{r figure 8, echo=FALSE, warning=FALSE}
 graph_quantil_all <-
@@ -401,24 +407,27 @@ graph_quantil_all <-
 
 In the above case, the axes are empirical luminance distributions
 clusters in the Milky Way and in M31. In the figure above, we can
-observe a non-linear trend that leads to the conclusion that the distributions
-the brightness of the two galaxies is different.
+observe a non-linear trend that leads to the conclusion that the
+distributions the brightness of the two galaxies is different.
 
-In order to confirm the above conclusion, the following test should be carried out:
+In order to confirm the above conclusion, the following test should be
+carried out:
 
 ```{r echo=FALSE, warning=FALSE}
 ks.test(milky_way, m_31 + module)
 ```
 
-The test statistics have been described in the previous task. For the level
-significance $\alpha = 0.05$ the hipothesis should be rejected, but because
-the significance level can also be assumed at the level of $\alpha = 0.01$ no
-we are sure about the correctness of rejecting the hypothesis.
+The test statistics have been described in the previous task. For the
+level significance $\alpha = 0.05$ the hipothesis should be rejected,
+but because the significance level can also be assumed at the level of
+$\alpha = 0.01$ no we are sure about the correctness of rejecting the
+hypothesis.
 
-# Estimators on survey data 
+# Estimators on survey data
 
-A consistent estimator that is unbiased and the most efficient of the mean
-is the mean value. The value of the calculated mean is presented below:
+A consistent estimator that is unbiased and the most efficient of the
+mean is the mean value. The value of the calculated mean is presented
+below:
 
 ```{r echo=FALSE}
 height <- survey$Height 
@@ -449,8 +458,9 @@ print(quantil_1)
 print(quantil_2)
 ```
 
-$$[171.1207; 173.641],$$
-while the mean value together with the error from this interval is: 
+$$[171.1207; 173.641],$$ while the mean value together with the error
+from this interval is:
+
 ```{r include=FALSE, echo=FALSE}
 quantil_mean <- mean(quantil_1, quantil_2)
 quantil_error <- sd(quantil_1, quantil_2)
@@ -458,8 +468,9 @@ quantil_error <- sd(quantil_1, quantil_2)
 
 $$172.38\pm 1.34 [cm].$$
 
-In order to test the null hypothesis, i.e. whether students smoke regardless of the amount
-chi-square test was used in the exercises. The statistics describing this test are:
+In order to test the null hypothesis, i.e. whether students smoke
+regardless of the amount chi-square test was used in the exercises. The
+statistics describing this test are:
 
 ```{=tex}
 \begin{equation}
@@ -467,10 +478,10 @@ chi-square test was used in the exercises. The statistics describing this test a
   \chi ^ 2 = \sum_{i=1} ^ r \sum_{k=1} ^ s \frac{(n_{ik} - n \cdot p_{ik}) ^ 2}{ n \cdot p_{ik}},
 \end{equation}
 ```
-
-where: $n_ {ik}$ - counts corresponding to a given pair categories, r = 3 - number of smoking 
-frequency categories, s = 4 - number of exercise frequency categories, 
-n - sum of $n_ {ik}$ and $p_ {ik}$ which is calculated from the formula:
+where: $n_ {ik}$ - counts corresponding to a given pair categories, r =
+3 - number of smoking frequency categories, s = 4 - number of exercise
+frequency categories, n - sum of $n_ {ik}$ and $p_ {ik}$ which is
+calculated from the formula:
 
 ```{=tex}
 \begin{equation}
@@ -478,9 +489,9 @@ n - sum of $n_ {ik}$ and $p_ {ik}$ which is calculated from the formula:
   \label{wz7}
 \end{equation} 
 ```
-
-In total, the statistics has 6 degrees of freedom, while the the critical area 
-is on the right. The following result was obtained chi-square test:
+In total, the statistics has 6 degrees of freedom, while the the
+critical area is on the right. The following result was obtained
+chi-square test:
 
 ```{r echo=FALSE, warning=FALSE}
 Exer <- survey$Exer
@@ -490,7 +501,7 @@ print(Table_Smoke)
 chisq.test(Exer, Smoke)
 ```
 
-It can be concluded from the test result that for the significance level 
+It can be concluded from the test result that for the significance level
 $\alpha = 0.05$ we have no grounds to reject the null hypothesis.
 
 # Linear Regression on faithful data
@@ -507,9 +518,9 @@ plot(x ~ y, ylab = "The length of the eruption [min]", xlab = "Waiting time for 
 abline(regline, lwd = 2, col = 2)
 ```
 
-Above are the statistics and the length dependence graph eruptions from waiting 
-time for the next eruption along with the fitted straight using linear regression. 
-Matching parameter values for straight:
+Above are the statistics and the length dependence graph eruptions from
+waiting time for the next eruption along with the fitted straight using
+linear regression. Matching parameter values for straight:
 
 ```{=tex}
 \begin{equation}
@@ -517,15 +528,14 @@ Matching parameter values for straight:
   \label{wz8}
 \end{equation} 
 ```
-
 are, among others:
 
-- $a = 0.0756 \pm 0.0023$,
-- $b = -1.87 \pm 0.17.$
+-   $a = 0.0756 \pm 0.0023$,
+-   $b = -1.87 \pm 0.17.$
 
-The above was used to estimate the duration of the next eruption
-formula with matching coefficients, where x = 80 min. After
-the substitution gave the following: $$4.18 \pm 0.36.$$
+The above was used to estimate the duration of the next eruption formula
+with matching coefficients, where x = 80 min. After the substitution
+gave the following: $$4.18 \pm 0.36.$$
 
 The residual plot of the regression fit is drawn below:
 
@@ -533,23 +543,24 @@ The residual plot of the regression fit is drawn below:
 plot(regline$residuals)
 ```
 
-As can be seen, the applied linear regression model is correct because the data 
-is scattered and does not show any trend.
+As can be seen, the applied linear regression model is correct because
+the data is scattered and does not show any trend.
 
-**Akaike** and **Bayesian** criteria are used for purpose comparison of the models 
-used with the data. Values obtained from these Criteria are estimates of the error 
-and compliance of the samples with the model. Their the value can indicate which 
-model is a better choice where a lower value means that the model for each data is
-better. The values of these criteria for regression are presented below liner:
+**Akaike** and **Bayesian** criteria are used for purpose comparison of
+the models used with the data. Values obtained from these Criteria are
+estimates of the error and compliance of the samples with the model.
+Their the value can indicate which model is a better choice where a
+lower value means that the model for each data is better. The values of
+these criteria for regression are presented below liner:
 
 ```{r echo=FALSE}
 print(AIC(regline))
 print(BIC(regline))
 ```
 
-Using a 95% confidence level for the mean eruption duration for the time of 80 min, 
-they were determined using the predict function predicted y values. Results of 
-the action are presented below functions:
+Using a 95% confidence level for the mean eruption duration for the time
+of 80 min, they were determined using the predict function predicted y
+values. Results of the action are presented below functions:
 
 ```{r echo=FALSE}
 regline1 <- lm(eruptions ~ waiting, data = faithful)
@@ -557,4 +568,5 @@ time80 = predict(regline1, data.frame(waiting = c(80)), interval = "confidence")
 print(time80)
 ```
 
-Ultimately, the confidence interval read from the above values is: $$(4.1; 4.25).$$
+Ultimately, the confidence interval read from the above values is:
+$$(4.1; 4.25).$$
