@@ -23,8 +23,10 @@ library(nortest)
 library(outliers)
 library(MASS)
 
-# Set working directory. If you don't know the path, enter pwd in the terminal to find your path
- setwd("~/GitHub/R-project/main")
+# Set working directory
+path <- getwd()
+setwd(path)
+
 # Load data with the file from data folder
 asteroids <- read.table("./data/asteroids.txt", header = T)
 
@@ -58,9 +60,15 @@ formula, where for the dens and err columns:
 standard_deviation_densinity <- sd(densinity)
 standard_deviation_err <- sd(error)
 
+se_function <- function(s, n) { 
+  se = s * 1.253 / sqrt(n)
+  return(se)
+  }
+
 # Calculate median standard error
-se_densinity <- (standard_deviation_densinity * 1.253) / sqrt(26)
-se_error <- (standard_deviation_err * 1.253) / sqrt(26)
+se_densinity <- se_function(standard_deviation_densinity, length(names))
+se_error <- se_function(standard_deviation_err, length(names))
+
 ```
 
 ```{r echo=FALSE}
@@ -444,11 +452,20 @@ standard_deviation_student <- sd(height, na.rm = T)
 n <- length(height)
 student_t <- qt(0.975, n - 1)
 print(student_t)
+
 # The confidence interval
-quantil_1 <-
-  qt(0.05 / 2, 237 - 1) * standard_deviation_student / sqrt(n) + estimator
-quantil_2 <-
-  qt(1 - 0.05 / 2, 237 - 1) * standard_deviation_student / sqrt(n) + estimator
+quantil_function <- function(problaity, number, standard_deviation_value, estimator_value) {
+  if (problaity > 0.05){
+    fraction <- 1 - (1 - problaity) / 2
+  } else {
+    fraction <- problaity / 2
+  }
+  quantil <- qt(fraction, number - 1) * standard_deviation_value / sqrt(number) + estimator_value
+  return(quantil)
+}
+
+quantil_1 <- quantil_function(0.05, n, standard_deviation_student, estimator)
+quantil_2 <- quantil_function(0.95, n, standard_deviation_student, estimator)
 ```
 
 Ultimately, the confidence interval is:
