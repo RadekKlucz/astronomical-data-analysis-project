@@ -1,6 +1,6 @@
 # :milky_way: Astronomical data analysis project
 
-Project in R language using astronomical data provided from <>. All theoretical information is available in the report folder in pdf or html format.
+Project in R language using astronomical data. All theoretical information is available in the report folder in pdf or html format.
 
 ## 🧑‍💻 Technology stack
 
@@ -53,7 +53,7 @@ Base Jupyter Notebook Stack -- python environment to run all files and modules
 
     ├───main
     │   └───data
-    └───report
+    └───reports
 
 ## 📧 Contact
 
