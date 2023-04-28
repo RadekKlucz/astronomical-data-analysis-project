@@ -53,7 +53,7 @@ Base Jupyter Notebook Stack -- python environment to run all files and modules
 
     ├───main
     │   └───data
-    └───raports
+    └───report
 
 ## 📧 Contact
 
